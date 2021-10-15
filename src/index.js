@@ -6,7 +6,7 @@ const Square = (props) => {
     return (
             <button
                 className="square"
-                onClick={()=> props.click()}
+                onClick={props.click}
             >
                 {props.value}
             </button>
@@ -17,12 +17,15 @@ const Square = (props) => {
 
 const Board = (props) => {
     const [board, setBoard] = useState(Array(9).fill(null))
-    const status = "Next player: X"
+    const [isNext, setIsNext] = useState(true);
+
+    const status = "Next player: " + (isNext ? 'X': 'O')
     function handleClick(i) {
         const squares = board.slice();
         console.log(squares)
-        squares[i] = 'X';
+        squares[i] = isNext ? "X" : "O";
         setBoard(squares);
+        setIsNext(!isNext);
     }
 
     return (
