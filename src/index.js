@@ -3,41 +3,45 @@ import ReactDOM from 'react-dom';
 import './index.css'
 
 const Square = (props) => {
-    const [value, setValue] = useState()
     return (
             <button
                 className="square"
-                onClick={()=>{
-                    console.log(setValue("X"))}}
+                onClick={()=> props.click()}
             >
-                {value}
+                {props.value}
             </button>
     )
 }
 
 
+
 const Board = (props) => {
+    const [board, setBoard] = useState(Array(9).fill(null))
     const status = "Next player: X"
+    function handleClick(i) {
+        const squares = board.slice();
+        console.log(squares)
+        squares[i] = 'X';
+        setBoard(squares);
+    }
 
     return (
         <div>
-
-
                 <div className="status">{status}</div>
                 <div className="board-row">
-                    <Square value = {0}/>
-                    <Square value = {1}/>
-                    <Square value = {2}/>
+                    <Square index ={0} value = {board[0]} click={()=> handleClick(0)}/>
+                    <Square index ={1} value = {board[1]} click={()=> handleClick(1)}/>
+                    <Square index ={2} value = {board[2]} click={()=> handleClick(2)}/>
                 </div>
                 <div className="board-row">
-                    <Square value = {3}/>
-                    <Square value = {4}/>
-                    <Square value = {5}/>
+                    <Square index ={3} value = {board[3]} click={()=> handleClick(3)}/>
+                    <Square index ={4} value = {board[4]} click={()=> handleClick(4)}/>
+                    <Square index ={5} value = {board[5]} click={()=> handleClick(5)}/>
                 </div>
                 <div className="board-row">
-                    <Square value = {6}/>
-                    <Square value = {7}/>
-                    <Square value = {8}/>
+                    <Square index ={6} value = {board[6]} click={()=> handleClick(6)}/>
+                    <Square index ={7} value = {board[7]} click={()=> handleClick(7)}/>
+                    <Square index ={8} value = {board[8]} click={()=> handleClick(8)}/>
                 </div>
         </div>
 
