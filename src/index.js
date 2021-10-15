@@ -1,6 +1,7 @@
-import React, {useState}from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css'
+
 const calculateWinner = (squares) => {
     const lines = [
         [0, 1, 2],
@@ -23,43 +24,42 @@ const calculateWinner = (squares) => {
 
 const Square = (props) => {
     return (
-            <button
-                className="square"
-                onClick={props.click}
-            >
-                {props.value}
-            </button>
+        <button
+            className="square"
+            onClick={props.click}
+        >
+            {props.value}
+        </button>
     )
 }
-
 
 
 const Board = (props) => {
 
     return (
         <div>
-                <div className="board-row">
-                    <Square index ={0} value = {props.board[0]} click={()=> props.click(0)}/>
-                    <Square index ={1} value = {props.board[1]} click={()=> props.click(1)}/>
-                    <Square index ={2} value = {props.board[2]} click={()=> props.click(2)}/>
-                </div>
-                <div className="board-row">
-                    <Square index ={3} value = {props.board[3]} click={()=> props.click(3)}/>
-                    <Square index ={4} value = {props.board[4]} click={()=> props.click(4)}/>
-                    <Square index ={5} value = {props.board[5]} click={()=> props.click(5)}/>
-                </div>
-                <div className="board-row">
-                    <Square index ={6} value = {props.board[6]} click={()=> props.click(6)}/>
-                    <Square index ={7} value = {props.board[7]} click={()=> props.click(7)}/>
-                    <Square index ={8} value = {props.board[8]} click={()=> props.click(8)}/>
-                </div>
+            <div className="board-row">
+                <Square value={props.board[0]} click={() => props.click(0)}/>
+                <Square value={props.board[1]} click={() => props.click(1)}/>
+                <Square value={props.board[2]} click={() => props.click(2)}/>
+            </div>
+            <div className="board-row">
+                <Square value={props.board[3]} click={() => props.click(3)}/>
+                <Square value={props.board[4]} click={() => props.click(4)}/>
+                <Square value={props.board[5]} click={() => props.click(5)}/>
+            </div>
+            <div className="board-row">
+                <Square value={props.board[6]} click={() => props.click(6)}/>
+                <Square value={props.board[7]} click={() => props.click(7)}/>
+                <Square value={props.board[8]} click={() => props.click(8)}/>
+            </div>
         </div>
 
     )
 }
 
-const Game = () =>{
-    const [boards,setBoards ] = useState([{squares: Array(9).fill(null)}]);
+const Game = () => {
+    const [boards, setBoards] = useState([{squares: Array(9).fill(null)}]);
     const [xIsNext, setXIsNext] = useState(true);
     const [stepNumber, setStepNumber] = useState(0);
 
@@ -68,10 +68,10 @@ const Game = () =>{
 
 
     const handleClick = (i) => {
-        const boardHistory = boards.slice(0, stepNumber+1);
-        const currentBoard = boardHistory[boardHistory.length-1]
+        const boardHistory = boards.slice(0, stepNumber + 1);
+        const currentBoard = boardHistory[boardHistory.length - 1]
         const squares = currentBoard.squares.slice();
-        if(calculateWinner(squares || squares[i])){
+        if (calculateWinner(squares) || squares[i]) {
             return;
         }
         squares[i] = xIsNext ? "X" : "O";
@@ -82,24 +82,22 @@ const Game = () =>{
 
     const jumpTo = (step) => {
         setStepNumber(step)
-        setXIsNext(step%2 === 0)
+        setXIsNext(step % 2 === 0)
     }
 
     const moves = boards.map((step, move) => {
         const desc = move ? 'Go to move # ' + move : 'Go to game start ';
-        return(
+        return (
             <li key={move}>
                 <button onClick={() => jumpTo(move)}> {desc} </button>
             </li>
         )
     })
 
-
-
     let status
     if (winner) {
         status = "Winner: " + winner;
-    }else {
+    } else {
         status = "Next player: " + (xIsNext ? 'X' : 'O');
     }
 
@@ -108,13 +106,13 @@ const Game = () =>{
             <div className="game">
                 <div className="game-board">
                     <Board
-                        board = {current.squares}
-                        click = {(i) => handleClick(i)}
+                        board={current.squares}
+                        click={handleClick}
                     />
                 </div>
                 <div className="game-info">
                     <div>
-                        { status }
+                        {status}
                     </div>
                     <ol>
                         {moves}
