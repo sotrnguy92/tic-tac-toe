@@ -35,44 +35,23 @@ const Square = (props) => {
 
 
 const Board = (props) => {
-    const [board, setBoard] = useState(Array(9).fill(null))
-    const [xIsNext, setXIsNext] = useState(true);
-    const winner = calculateWinner(board)
-    let status;
-    if(winner) {
-        status = "Winner " + winner
-    }else{
-        status = "Next player: " + (xIsNext ? 'X': 'O')
-    }
-
-    const handleClick = (i) => {
-        const squares = board.slice();
-        if(calculateWinner(squares || squares[i])){
-            return;
-        }
-        squares[i] = xIsNext ? "X" : "O";
-        setBoard(squares);
-        setXIsNext(!xIsNext);
-    }
-
 
     return (
         <div>
-                <div className="status">{status}</div>
                 <div className="board-row">
-                    <Square index ={0} value = {board[0]} click={()=> handleClick(0)}/>
-                    <Square index ={1} value = {board[1]} click={()=> handleClick(1)}/>
-                    <Square index ={2} value = {board[2]} click={()=> handleClick(2)}/>
+                    <Square index ={0} value = {props.board[0]} click={()=> props.click(0)}/>
+                    <Square index ={1} value = {props.board[1]} click={()=> props.click(1)}/>
+                    <Square index ={2} value = {props.board[2]} click={()=> props.click(2)}/>
                 </div>
                 <div className="board-row">
-                    <Square index ={3} value = {board[3]} click={()=> handleClick(3)}/>
-                    <Square index ={4} value = {board[4]} click={()=> handleClick(4)}/>
-                    <Square index ={5} value = {board[5]} click={()=> handleClick(5)}/>
+                    <Square index ={3} value = {props.board[3]} click={()=> props.click(3)}/>
+                    <Square index ={4} value = {props.board[4]} click={()=> props.click(4)}/>
+                    <Square index ={5} value = {props.board[5]} click={()=> props.click(5)}/>
                 </div>
                 <div className="board-row">
-                    <Square index ={6} value = {board[6]} click={()=> handleClick(6)}/>
-                    <Square index ={7} value = {board[7]} click={()=> handleClick(7)}/>
-                    <Square index ={8} value = {board[8]} click={()=> handleClick(8)}/>
+                    <Square index ={6} value = {props.board[6]} click={()=> props.click(6)}/>
+                    <Square index ={7} value = {props.board[7]} click={()=> props.click(7)}/>
+                    <Square index ={8} value = {props.board[8]} click={()=> props.click(8)}/>
                 </div>
         </div>
 
@@ -80,18 +59,65 @@ const Board = (props) => {
 }
 
 const Game = () =>{
+    const [boards,setBoards ] = useState([{squares: Array(9).fill(null)}]);
+    const [xIsNext, setXIsNext] = useState(true);
+    const [stepNumber, setStepNumber] = useState(0);
+
+    const current = boards[stepNumber];
+    const winner = calculateWinner(current.squares)
+
+
+    const handleClick = (i) => {
+        const boardHistory = boards.slice(0, stepNumber+1);
+        const currentBoard = boardHistory[boardHistory.length-1]
+        const squares = currentBoard.squares.slice();
+        if(calculateWinner(squares || squares[i])){
+            return;
+        }
+        squares[i] = xIsNext ? "X" : "O";
+        setBoards(boardHistory.concat({squares: squares}));
+        setXIsNext(!xIsNext);
+        setStepNumber(boardHistory.length)
+    }
+
+    const jumpTo = (step) => {
+        setStepNumber(step)
+        setXIsNext(step%2 === 0)
+    }
+
+    const moves = boards.map((step, move) => {
+        const desc = move ? 'Go to move # ' + move : 'Go to game start ';
+        return(
+            <li key={move}>
+                <button onClick={() => jumpTo(move)}> {desc} </button>
+            </li>
+        )
+    })
+
+
+
+    let status
+    if (winner) {
+        status = "Winner: " + winner;
+    }else {
+        status = "Next player: " + (xIsNext ? 'X' : 'O');
+    }
+
     return (
         <div>
             <div className="game">
                 <div className="game-board">
-                    <Board/>
+                    <Board
+                        board = {current.squares}
+                        click = {(i) => handleClick(i)}
+                    />
                 </div>
                 <div className="game-info">
                     <div>
-                        {/* Status */}
+                        { status }
                     </div>
                     <ol>
-                        {/* TODO */}
+                        {moves}
                     </ol>
                 </div>
             </div>
