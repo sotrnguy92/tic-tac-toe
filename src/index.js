@@ -1,15 +1,16 @@
-import React from 'react';
+import React, {useState}from 'react';
 import ReactDOM from 'react-dom';
 import './index.css'
 
 const Square = (props) => {
+    const [value, setValue] = useState()
     return (
             <button
                 className="square"
                 onClick={()=>{
-                    console.log('click')}}
+                    console.log(setValue("X"))}}
             >
-                {props.value }
+                {value}
             </button>
     )
 }
