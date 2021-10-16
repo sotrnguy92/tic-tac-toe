@@ -119,7 +119,6 @@ const Game = () => {
                     </ol>
                 </div>
             </div>
-
         </div>
     )
 }
